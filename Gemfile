@@ -23,6 +23,7 @@ gem "solid_cable"
 gem "graphql"
 gem "sidekiq"
 gem "redis"
+gem "connection_pool"
 
 group :development do
   gem "graphiql-rails"

@@ -360,6 +360,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   bundler-audit
+  connection_pool
   debug
   graphiql-rails
   graphql

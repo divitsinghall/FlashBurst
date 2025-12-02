@@ -8,12 +8,12 @@ namespace :verify do
     variant.update!(inventory_count: 100)
     
     # Initialize Redis key
-    redis = InventoryService.redis
+    redis_pool = InventoryService.redis
     key = "product_variant:#{variant.id}:inventory"
-    redis.set(key, 100)
+    redis_pool.with { |r| r.set(key, 100) }
     
     puts "Initial inventory (DB): #{variant.inventory_count}"
-    puts "Initial inventory (Redis): #{redis.get(key)}"
+    puts "Initial inventory (Redis): #{redis_pool.with { |r| r.get(key) }}"
 
     # 2. Spawn 150 concurrent threads
     threads = []
@@ -38,7 +38,7 @@ namespace :verify do
 
     # 4. Print final inventory
     final_db_count = variant.reload.inventory_count
-    final_redis_count = redis.get(key).to_i
+    final_redis_count = redis_pool.with { |r| r.get(key).to_i }
     
     puts "Final inventory (DB): #{final_db_count}"
     puts "Final inventory (Redis): #{final_redis_count}"
